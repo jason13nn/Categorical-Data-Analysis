@@ -1,0 +1,94 @@
+---
+title: "CH1-4 Code"
+author: "Yichien Chou"
+date: "2020/3/22"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 2.17
+
+```{r}
+#Create table 2.3
+tab = matrix(c(189, 104, 10845, 10933), nrow=2)
+dimnames(tab) = list(Group=c("Placebo","Aspirin"),MI=c("Yes","No"))
+#X2
+chisq.test(tab) 
+##G2
+library(DescTools)
+GTest(tab) 
+```
+
+## 2.19
+
+```{r}
+tab = matrix(c(1315, 382, 873, 43), nrow=2)
+dimnames(tab) = list(Race=c("White","Black"), Party=c("NonRepublican","Republican"))
+tab
+GTest(tab) 
+```
+
+##3.11
+```{r}
+income=data.frame(wafer=c(8,7,6,6,3,4,7,2,3,4,9,9,8,14,8,13,11,5,7,6),
+                  trt=rep(c("A","B"),each=10))
+income
+
+income.poi=glm(wafer ~ trt, data=income, family=poisson)
+summary(income.poi)
+```
+
+##3.12
+```{r}
+income1=data.frame(wafer=c(8,7,6,6,3,4,7,2,3,4,9,9,8,14,8,13,11,5,7,6),
+                  trt=rep(c("A","B"),each=10),
+                  z=rep(c(0,1,0,1), each=5))
+income1
+
+income1.poi=glm(wafer ~ trt + z, data=income1, family=poisson)
+summary(income1.poi)
+```
+
+##3.13
+```{r}
+crab <- read.csv('/Users/jason13nn/Desktop/SMU/Spring 2020/STAT 6395   (CDA)/files/horseshoecrabs.csv')
+attach(crab)
+crab.poi = glm(Satellites ~ Weight, family = poisson)
+summary(crab.poi)
+
+confint(crab.poi)
+exp(confint(crab.poi))
+```
+
+##4.8
+```{r}
+horseshoecrabs=read.csv("/Users/jason13nn/Desktop/SMU/Spring 2020/STAT 6395   (CDA)/files/horseshoecrabs.csv")
+crabs.logit = glm((Satellites > 0) ~ Weight, family=binomial, data=horseshoecrabs)
+summary(crabs.logit)
+
+```
+
+##4.24
+```{r}
+surgery = matrix(c(45, 15, 40, 83, 90, 25, 35, 65, 95, 35, 75, 45,
+               50, 75, 30, 25, 20, 60, 70, 30, 60, 61, 65, 15,
+               20, 45, 15, 25, 15, 30, 40, 15, 135, 20, 40,
+               0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1,
+               1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1,
+               1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 
+               0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+               0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0,
+               0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0), ncol = 3)
+dimnames(surgery) = list(Patient=c(1:35), Surgery=c("D","T","Y"))
+surgery = as.data.frame(surgery)
+surgery
+
+surgery.logit = glm((Y > 0) ~ D + T, family=binomial, data=surgery)
+summary(surgery.logit)
+
+surgery.interaction.logit = glm((Y > 0) ~ D + T + D * T, family=binomial, data=surgery)
+summary(surgery.interaction.logit)
+```
